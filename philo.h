@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:18:52 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/22 17:42:59 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/23 13:52:25 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ typedef enum e_state
 
 typedef struct s_philo
 {
-	int		number; //placement of philo, 0->party_count
-	//int		forks;
-	int		eat_count;
-	t_state	state;
+	int				number; //placement of philo, 0->party_count
+	//int			forks;
+	int				eat_count;
+	t_state			state;
 	struct s_philo	*next;
 } t_philo;
 
