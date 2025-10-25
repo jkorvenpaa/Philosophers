@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:55:01 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/23 18:29:27 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/25 16:11:00 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static bool	numeric_arg(char *arg)
 	int	i;
 
 	i = 0;
+	while (arg[i] && (arg[i] == 32 || (arg[i] >= 9 && arg[i] <= 13)))
+		i++;
 	if (arg[i] == '+')
 		i++;
 	while (arg[i])
@@ -46,7 +48,7 @@ bool	validate_args(int argc, char **argv)
 		printf("invalid argument count");
 		return (false);
 	}
-	while (1)
+	while (argv[i])
 	{
 		if (!numeric_arg)
 		{

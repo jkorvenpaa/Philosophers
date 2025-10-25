@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:18:52 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/23 18:28:46 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/25 16:30:17 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,31 @@ typedef enum e_state
 
 typedef struct s_philo
 {
-	int				number; //placement of philo, 0->party_count
-	//int			forks;
-	int				eat_count;
+	int				nbr; //placement of philo, 1->party_count
+	bool			even; //  even or odd philo nbr
+	pthread_mutex_t	*r_fork;
+	pthread_mutex_t	*l_fork;
+	pthread_t		id;
 	t_state			state;
-	struct s_philo	*next;
+	atomic_long		last_supper;
+	int				eat_count;
 }	t_philo;
 
 typedef struct s_dinner
 {
-	int		party_count; //number of forks/philos
-	int		die_time;
-	int		eat_time;
-	int		sleep_time;
-	int		must_eat;
-	t_philo	**philo;
+	int				party_count; //number of forks/philos
+	long			start_time;
+	int				die_time;
+	int				eat_time;
+	int				sleep_time;
+	int				must_eat;
+	pthread_mutex_t	*printlock;
+	pthread_mutex_t	*forks;
+	t_philo	*philo;
 }	t_dinner;
 
 int		ft_atoi(const char *nptr);
 bool	validate_args(int argc, char **argv);
+void	start_dinner(t_dinner *dinner, t_philo *philo);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:12:11 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/23 18:32:27 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/25 16:29:57 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ t_philo	**init_philos(t_dinner *dinner)
 	int		i;
 
 	philo = malloc(sizeof(t_philo *) * dinner->party_count);
+	if (!philo)
+		return (NULL);
 	i = 0;
 	while (i < dinner->party_count)
 	{
@@ -44,14 +46,12 @@ t_philo	**init_philos(t_dinner *dinner)
 			free_philos(dinner, philo, i);
 			return (NULL);
 		}
-		philo[i]->number = i;
-		//philo->forks = 0;
-		philo[i]->eat_count = 0;
-		philo[i]->state = 0;
-		philo[i]->next = NULL;
+		memset(philo[i], 0, sizeof(t_philo));
+		philo[i]->nbr = i+1;
+		if ((i+1) % 2 == 0)
+			philo[i]->even = true;
 		i++;
 	}
-	printf("hey philos done");
 	return (philo);
 }
 
@@ -68,11 +68,12 @@ t_dinner	*init_dinner(char **argv)
 	dinner->sleep_time = ft_atoi(argv[4]);
 	if (argv[5])
 		dinner->must_eat = ft_atoi(argv[5]);
-	else
-		dinner->must_eat = 0;
 	dinner->philo = init_philos(dinner);
 	if (dinner->philo == NULL) //|| die_time < eat_time + sleep_time)
+	{
+		free (dinner);
 		return (NULL);
+	}
 	return (dinner);
 }
 
@@ -80,11 +81,13 @@ int	main(int argc, char **argv)
 {
 	t_dinner	*dinner;
 
+	memset(dinner, 0, sizeof(t_dinner));
 	if (!validate_args(argc, argv))
 		return (1);
 	dinner = init_dinner(argv);
 	if (!dinner)
 		return (1);
+	start_dinner(dinner, dinner->philo);
 	free_philos(dinner, dinner->philo, dinner->party_count-1);
 	return (0);
 }
