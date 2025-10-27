@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:12:11 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/25 16:29:57 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:19:03 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,41 +18,74 @@ pthread_mutex_unlock*/
 
 #include "philo.h"
 
-void	free_philos(t_dinner *dinner, t_philo **philo, int i)
-{
-	while (i >= 0)
-	{
-		free(philo[i]);
-		i--;
-	}
-	free(philo);
-	free(dinner);
-}
 
-t_philo	**init_philos(t_dinner *dinner)
+bool	init_philos(t_dinner *dinner)
 {
-	t_philo	**philo;
 	int		i;
 
-	philo = malloc(sizeof(t_philo *) * dinner->party_count);
-	if (!philo)
-		return (NULL);
+	dinner->philo = malloc(sizeof(t_philo) * dinner->party_count);
+	if (!dinner->philo)
+	{
+		free(dinner);
+		return (false);
+	}
 	i = 0;
 	while (i < dinner->party_count)
 	{
-		philo[i] = malloc(sizeof(t_philo));
-		if (!philo[i])
-		{
-			free_philos(dinner, philo, i);
-			return (NULL);
-		}
-		memset(philo[i], 0, sizeof(t_philo));
-		philo[i]->nbr = i+1;
+		memset(&dinner->philo[i], 0, sizeof(t_philo));
+		dinner->philo[i].nbr = i+1;
 		if ((i+1) % 2 == 0)
-			philo[i]->even = true;
+			dinner->philo[i].even = true;
 		i++;
 	}
-	return (philo);
+	return (true);
+}
+void	assign_forks(t_dinner *dinner)
+{
+	int	i;
+
+	i = 0;
+	while (i < dinner->party_count)
+	{
+		dinner->philo[i].r_fork = &dinner->forks[i];
+		if (i < 0)
+			dinner->philo[i].l_fork = &dinner->forks[i];
+		else
+			dinner->philo[i].l_fork = &dinner->forks[dinner->party_count-1];
+		i++;
+	}
+
+}
+
+bool	init_forks(t_dinner *dinner)
+{
+	int		i;
+
+	i = 0;
+	pthread_mutex_init(dinner->printlock, NULL) != 0;
+		return (false);
+	dinner->forks = malloc(sizeof(pthread_mutex_t) * dinner->party_count);
+	if (!dinner->forks)
+	{
+		pthread_mutex_destroy(dinner->printlock);
+		return (false);
+	}
+	while (i < dinner->party_count)
+	{
+		if (pthread_mutex_init(&dinner->forks[i], NULL) != 0)
+		{
+			pthread_mutex_destroy(dinner->printlock);
+			while (i >= 0)
+			{
+				pthread_mutex_destroy(&dinner->forks[i]);
+				i--;
+			}
+			return (false);
+		}
+		i++;
+	}
+	assign_forks(dinner);
+	return (true);
 }
 
 t_dinner	*init_dinner(char **argv)
@@ -68,10 +101,14 @@ t_dinner	*init_dinner(char **argv)
 	dinner->sleep_time = ft_atoi(argv[4]);
 	if (argv[5])
 		dinner->must_eat = ft_atoi(argv[5]);
-	dinner->philo = init_philos(dinner);
-	if (dinner->philo == NULL) //|| die_time < eat_time + sleep_time)
+	else
+		dinner->must_eat = 0;
+	if (!init_philos(dinner))//|| die_time < eat_time + sleep_time)
+		return (NULL);
+	if(!init_forks(dinner))
 	{
-		free (dinner);
+		free(dinner->philo);
+		free(dinner);
 		return (NULL);
 	}
 	return (dinner);
@@ -81,7 +118,6 @@ int	main(int argc, char **argv)
 {
 	t_dinner	*dinner;
 
-	memset(dinner, 0, sizeof(t_dinner));
 	if (!validate_args(argc, argv))
 		return (1);
 	dinner = init_dinner(argv);

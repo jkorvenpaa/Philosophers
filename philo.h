@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:18:52 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/25 16:30:17 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/27 11:22:07 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <sys/time.h> //gettimeofday
 # include <limits.h> ////////////////////////////////////////////////////
 # include <stdbool.h>
+# include <stdatomic.h>
 
 typedef enum e_state
 {

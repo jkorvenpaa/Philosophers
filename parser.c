@@ -6,19 +6,12 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:55:01 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/25 16:11:00 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/27 12:19:10 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static int	ft_isdigit(int c)
-{
-	if (c < 48 || c > 57)
-		return (0);
-	else
-		return (1);
-}
 
 static bool	numeric_arg(char *arg)
 {
@@ -31,7 +24,7 @@ static bool	numeric_arg(char *arg)
 		i++;
 	while (arg[i])
 	{
-		if (ft_isdigit == 0)
+		if (arg[i] < 48 || arg[i] > 57)
 			return (false);
 		i++;
 	}
