@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:18:52 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/27 11:22:07 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/28 15:58:52 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct s_philo
 typedef struct s_dinner
 {
 	int				party_count; //number of forks/philos
-	long			start_time;
+	atomic_long			start_time;
 	int				die_time;
 	int				eat_time;
 	int				sleep_time;
@@ -59,6 +59,10 @@ typedef struct s_dinner
 
 int		ft_atoi(const char *nptr);
 bool	validate_args(int argc, char **argv);
+t_dinner	*init_dinner(char **argv);
 void	start_dinner(t_dinner *dinner, t_philo *philo);
+void	clean_all(t_dinner *dinner, int count);
+long	get_time(void);
+void	assign_forks(t_dinner *dinner);
 
 #endif
