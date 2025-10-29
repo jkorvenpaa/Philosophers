@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:18:52 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/28 15:58:52 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/29 15:01:57 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,13 @@
 
 typedef enum e_state
 {
-	START,
-	EATING,
 	THINKING,
+	EATING,
 	SLEEPING,
 	DEAD,
 }	t_state;
+
+
 
 typedef struct s_philo
 {
@@ -42,6 +43,7 @@ typedef struct s_philo
 	t_state			state;
 	atomic_long		last_supper;
 	int				eat_count;
+	struct s_dinner		*dinner;
 }	t_philo;
 
 typedef struct s_dinner
@@ -60,9 +62,11 @@ typedef struct s_dinner
 int		ft_atoi(const char *nptr);
 bool	validate_args(int argc, char **argv);
 t_dinner	*init_dinner(char **argv);
-void	start_dinner(t_dinner *dinner, t_philo *philo);
+int	start_dinner(t_dinner *dinner, t_philo *philo);
 void	clean_all(t_dinner *dinner, int count);
 long	get_time(void);
 void	assign_forks(t_dinner *dinner);
+void	print_message(t_dinner *dinner, char *message);
+void	pick_fork(pthread_mutex_t *fork, t_philo *philo);
 
 #endif

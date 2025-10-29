@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:12:11 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/28 16:06:15 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/29 12:20:45 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	main(int argc, char **argv)
 	if (!dinner)
 		return (1);
 	start_dinner(dinner, dinner->philo);
-	print_args (dinner);
+	//print_args (dinner);
 	clean_all(dinner, dinner->party_count-1);
 	return (0);
 }

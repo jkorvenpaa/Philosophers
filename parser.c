@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:55:01 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/28 15:43:49 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/29 13:33:00 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ bool	init_philos(t_dinner *dinner)
 		dinner->philo[i].nbr = i+1;
 		if ((i+1) % 2 == 0)
 			dinner->philo[i].even = true;
+		dinner->philo[i].dinner = dinner;
 		i++;
 	}
 	return (true);
