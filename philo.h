@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:18:52 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/29 15:01:57 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/30 16:36:01 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,25 +48,27 @@ typedef struct s_philo
 
 typedef struct s_dinner
 {
-	int				party_count; //number of forks/philos
+	long			party_count; //number of forks/philos
 	atomic_long			start_time;
-	int				die_time;
-	int				eat_time;
-	int				sleep_time;
-	int				must_eat;
+	atomic_long			die_time;
+	atomic_long			eat_time;
+	atomic_long			sleep_time;
+	long			must_eat;
 	pthread_mutex_t	*printlock;
 	pthread_mutex_t	*forks;
 	t_philo	*philo;
 }	t_dinner;
 
-int		ft_atoi(const char *nptr);
 bool	validate_args(int argc, char **argv);
 t_dinner	*init_dinner(char **argv);
-int	start_dinner(t_dinner *dinner, t_philo *philo);
+int		start_dinner(t_dinner *dinner, t_philo *philo);
 void	clean_all(t_dinner *dinner, int count);
 long	get_time(void);
 void	assign_forks(t_dinner *dinner);
-void	print_message(t_dinner *dinner, char *message);
+void	print_message(t_philo *philo, char *message);
 void	pick_fork(pthread_mutex_t *fork, t_philo *philo);
+bool	anybody_dead(t_dinner *dinner);
+bool	philo_alive(t_philo *philo);
+bool	meals_done(t_dinner *dinner);
 
 #endif

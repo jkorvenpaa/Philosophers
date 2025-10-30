@@ -6,25 +6,13 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:11:20 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/29 15:03:39 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/30 16:41:37 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	clean_all(t_dinner *dinner, int count)
-{
-	pthread_mutex_destroy(dinner->printlock);
-	free(dinner->printlock);
-	while (count >= 0)
-	{
-		pthread_mutex_destroy(&dinner->forks[count]);
-		count--;
-	}
-	free(dinner->forks);
-	free(dinner->philo);
-	free(dinner);
-}
+
 
 long	get_time(void)
 {
@@ -34,20 +22,74 @@ long	get_time(void)
 	return (current.tv_sec * 1000L + current.tv_usec / 1000L);
 }
 
-void	print_message(t_dinner *dinner, char *message)
+void	print_message(t_philo *philo, char *message)
 {
-	pthread_mutex_lock(dinner->printlock);
-	printf("%s\n", message);
-	pthread_mutex_unlock(dinner->printlock);
+	long	time;
+	pthread_mutex_lock(philo->dinner->printlock);
+	time = get_time() - philo->dinner->start_time;
+	printf("%ld %d is %s\n", time, philo->nbr, message);
+	pthread_mutex_unlock(philo->dinner->printlock);
 		
 }
 
 void	pick_fork(pthread_mutex_t *fork, t_philo *philo)
 {
-	pthread_mutex_lock(fork);
-	printf("timestamp_in_ms %d has taken a fork\n", philo->nbr);
-	//pthread_mutex_unlock(fork);
+	long	time;
 
+	pthread_mutex_lock(fork);
+	time = get_time() - philo->dinner->start_time;
+	printf("%ld %d has taken a fork\n", time, philo->nbr);
+	//pthread_mutex_unlock(fork);
+}
+bool	anybody_dead(t_dinner *dinner)
+{
+	int	i;
+
+	i = 0;
+	while (i < dinner->party_count)
+	{
+		if (dinner->philo[i].state == DEAD)
+			return (true);
+		i++;
+	}
+	return (false);
+
+}
+
+bool	philo_alive(t_philo *philo)
+{
+	if ((get_time() - philo->last_supper) > philo->dinner->die_time)
+	{
+		philo->state = DEAD;
+		pthread_mutex_lock(philo->dinner->printlock);
+		printf("%ld %d died\n", get_time() - philo->dinner->start_time, philo->nbr);
+		pthread_mutex_unlock(philo->dinner->printlock);
+		return (false);
+	}
+	return (true);
+		
+}
+bool	meals_done(t_dinner *dinner)
+{
+	int i;
+
+	if (dinner->must_eat == 0)
+		return(false);
+	pthread_mutex_lock(dinner->printlock);
+	i = 0;
+	while (i < dinner->party_count)
+	{
+		if (dinner->philo[i].eat_count < dinner->must_eat)
+		{
+			pthread_mutex_unlock(dinner->printlock);
+			return(false);
+		}
+		i++;
+	}
+	printf("all philos had %ld meals\n", dinner->must_eat);
+	pthread_mutex_unlock(dinner->printlock);
+	return (true);
+	
 }
 /*
 ◦ timestamp_in_ms X has taken a fork

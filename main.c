@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:12:11 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/29 12:20:45 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/30 16:41:46 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,27 @@ pthread_mutex_unlock*/
 
 void	print_args (t_dinner *dinner)
 {
-	printf("%d\n", dinner->party_count);
+	printf("%ld\n", dinner->party_count);
 	printf("%ld\n", dinner->start_time);
-	printf("%d\n", dinner->die_time);
-	printf("%d\n", dinner->eat_time);
-	printf("%d\n", dinner->sleep_time);
-	printf("%d\n", dinner->must_eat);
+	printf("%ld\n", dinner->die_time);
+	printf("%ld\n", dinner->eat_time);
+	printf("%ld\n", dinner->sleep_time);
+	printf("%ld\n", dinner->must_eat);
 }
 
+void	clean_all(t_dinner *dinner, int count)
+{
+	pthread_mutex_destroy(dinner->printlock);
+	free(dinner->printlock);
+	while (count >= 0)
+	{
+		pthread_mutex_destroy(&dinner->forks[count]);
+		count--;
+	}
+	free(dinner->forks);
+	free(dinner->philo);
+	free(dinner);
+}
 
 int	main(int argc, char **argv)
 {

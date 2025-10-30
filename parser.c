@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:55:01 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/29 13:33:00 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/10/30 16:18:33 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,34 @@ static bool	numeric_arg(char *arg)
 	}
 	return (true);
 }
+long	mini_atol(const char *nptr)
+{
+	long	i;
+	//long	sign;
+	long long	out;
+
+	i = 0;
+	//sign = 1;
+	out = 0;
+	while (nptr[i] == 32 || (nptr[i] >= 9 && nptr[i] <= 13))
+		i++;
+	if (nptr[i] == '+' || nptr[i] == '-')
+	{
+		if (nptr[i] == '-')
+			return (-1);
+		i++;
+	}
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		if (out > (LONG_MAX - (nptr[i] - '0')) / 10)
+			return (-2);
+	//	if (sign == -1 && ((-1 * out) < (LONG_MIN + (nptr[i] - '0')) / 10))
+	//		return (LONG_MIN);
+		out = out * 10 + nptr[i] - '0';
+		i++;
+	}
+	return ((long)(out));
+}
 
 bool	validate_args(int argc, char **argv)
 {
@@ -48,9 +76,9 @@ bool	validate_args(int argc, char **argv)
 			printf("numeric arguments expected\n");
 			return (false);
 		}
-		if (ft_atoi(argv[i]) <= 0) //must eat???
+		if (mini_atol(argv[i]) <= 0) //must eat???
 		{
-			printf("arguments expected: number between 1 and INTMAX\n");
+			printf("arguments expected: number between 1 and LONGMAX\n");
 			return (false);
 		}
 		i++;
@@ -88,10 +116,11 @@ void	assign_forks(t_dinner *dinner)
 	while (i < dinner->party_count)
 	{
 		dinner->philo[i].r_fork = &dinner->forks[i];
-		if (i < 0)
-			dinner->philo[i].l_fork = &dinner->forks[i];
+		if (i == 0)
+			dinner->philo[i].l_fork = &dinner->forks[dinner->party_count-1];	
 		else
-			dinner->philo[i].l_fork = &dinner->forks[dinner->party_count-1];
+			dinner->philo[i].l_fork = &dinner->forks[i-1];
+			
 		i++;
 	}
 
@@ -146,12 +175,12 @@ t_dinner	*init_dinner(char **argv)
 	dinner = malloc(sizeof(t_dinner));
 	if (!dinner)
 		return (NULL);
-	dinner->party_count = ft_atoi(argv[1]);
-	dinner->die_time = ft_atoi(argv[2]);
-	dinner->eat_time = ft_atoi(argv[3]);
-	dinner->sleep_time = ft_atoi(argv[4]);
+	dinner->party_count = mini_atol(argv[1]);
+	dinner->die_time = mini_atol(argv[2]);
+	dinner->eat_time = mini_atol(argv[3]);
+	dinner->sleep_time = mini_atol(argv[4]);
 	if (argv[5])
-		dinner->must_eat = ft_atoi(argv[5]);
+		dinner->must_eat = mini_atol(argv[5]);
 	else
 		dinner->must_eat = 0;
 	if (!init_philos(dinner))//|| die_time < eat_time + sleep_time)
