@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 15:11:20 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/30 16:41:37 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/01 17:10:02 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,29 +43,37 @@ void	pick_fork(pthread_mutex_t *fork, t_philo *philo)
 }
 bool	anybody_dead(t_dinner *dinner)
 {
+	pthread_mutex_lock(dinner->statelock);
 	int	i;
 
 	i = 0;
 	while (i < dinner->party_count)
 	{
 		if (dinner->philo[i].state == DEAD)
+		{
+			pthread_mutex_unlock(dinner->statelock);
 			return (true);
+		}
 		i++;
 	}
+	pthread_mutex_unlock(dinner->statelock);
 	return (false);
 
 }
 
 bool	philo_alive(t_philo *philo)
 {
+	pthread_mutex_lock(philo->dinner->statelock);
 	if ((get_time() - philo->last_supper) > philo->dinner->die_time)
 	{
 		philo->state = DEAD;
 		pthread_mutex_lock(philo->dinner->printlock);
 		printf("%ld %d died\n", get_time() - philo->dinner->start_time, philo->nbr);
 		pthread_mutex_unlock(philo->dinner->printlock);
+		pthread_mutex_unlock(philo->dinner->statelock);
 		return (false);
 	}
+	pthread_mutex_unlock(philo->dinner->statelock);
 	return (true);
 		
 }

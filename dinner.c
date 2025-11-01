@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 12:45:35 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/30 16:49:12 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/01 18:02:49 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,23 @@
 
 void	philo_cycle(t_philo *philo, t_dinner *dinner)
 {
-	philo->state = EATING;
+	long	s_time;
+	long	e_time;
+
+	//philo->state = EATING;
 	print_message(philo, "eating");
 	philo->last_supper = get_time();
+	e_time = get_time();
+	while (dinner->eat_time > (get_time() - e_time) && (philo->state!=DEAD))
+		usleep(200);
 	philo->eat_count++;
-	while (dinner->eat_time > (get_time() - dinner->start_time))
-		usleep(100);
 	pthread_mutex_unlock(philo->r_fork);
 	pthread_mutex_unlock(philo->l_fork);
-	philo->state = SLEEPING;
+	//philo->state = SLEEPING;
 	print_message(philo, "sleeping");
-	while (philo->dinner->sleep_time > (get_time() - dinner->start_time))
-		usleep(100);
+	s_time = get_time();
+	while (philo->dinner->sleep_time > (get_time() - s_time) && (philo->state!=DEAD))
+		usleep(200);
 }
 
 void	*start_routine(void *arg)
@@ -36,16 +41,20 @@ void	*start_routine(void *arg)
 	while (get_time() < philo->dinner->start_time)
 		usleep(100);
 	philo->last_supper = philo->dinner->start_time;
-	//int i = 0;
 	if (philo->dinner->party_count == 1)
+	{
+		pick_fork(philo->l_fork, philo);
+		while (philo_alive(philo))
+			usleep (100);
 		return (NULL);
-	while (1)
+	}
+	while (philo->state != DEAD)
 	{
 		if (anybody_dead(philo->dinner) || meals_done(philo->dinner))
 			return (NULL);
-		if (philo_alive(philo))
+		if (philo->state == THINKING)
 		{
-			philo->state = THINKING;
+			//philo->state = THINKING;
 			print_message(philo, "thinking");
 		}
 		else
@@ -55,20 +64,42 @@ void	*start_routine(void *arg)
 			usleep (200);
 			pick_fork(philo->r_fork, philo);
 			pick_fork(philo->l_fork, philo);
-			if (philo_alive(philo) && anybody_dead(philo->dinner) == false)
+			if (anybody_dead(philo->dinner) == false)
 				philo_cycle(philo, philo->dinner);
 		}
 		else // odd philo
 		{
 			pick_fork(philo->l_fork, philo);
 			pick_fork(philo->r_fork, philo);
-			if (philo_alive(philo) && anybody_dead(philo->dinner) == false)
+			if (anybody_dead(philo->dinner) == false)
 				philo_cycle(philo, philo->dinner);
 		}
 	}
 	return (NULL);
 }
 
+void	monitor(t_dinner *dinner)
+{
+	int i = 0;
+
+	while (get_time() < dinner->start_time)
+		usleep(100);
+	while (1)
+	{
+		while(i < dinner->party_count)
+		{
+			if (!philo_alive(&dinner->philo[i]))
+				return ;
+			i++;
+		}
+		i = 0;
+		if (meals_done(dinner))
+		{
+			return;
+		}
+		usleep (200);
+	}
+}
 
 int	start_dinner(t_dinner *dinner, t_philo	*philo)
 {
@@ -83,6 +114,7 @@ int	start_dinner(t_dinner *dinner, t_philo	*philo)
 			return (1);
 		i++;
 	}
+	monitor(dinner);
 	i = 0;
 	while (i < dinner->party_count)
 	{
@@ -90,5 +122,6 @@ int	start_dinner(t_dinner *dinner, t_philo	*philo)
 			return (2);
 		i++;
 	}
+	
 	return (0);
 }

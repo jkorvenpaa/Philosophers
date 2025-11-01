@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:55:01 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/30 16:18:33 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/01 16:01:11 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,16 +131,34 @@ bool	init_forks(t_dinner *dinner)
 	int		i;
 
 	i = 0;
-	dinner->printlock = malloc(sizeof(pthread_mutex_t));
-	if (!dinner->printlock)
+	dinner->statelock = malloc(sizeof(pthread_mutex_t));
+	if (!dinner->statelock)
 	{
 		free(dinner->philo);
 		free(dinner);
 		return(false);
 	}
-	if (pthread_mutex_init(dinner->printlock, NULL) != 0)
+	if (pthread_mutex_init(dinner->statelock, NULL) != 0)
 	{
 		free(dinner->philo);
+		free(dinner->statelock);
+		free(dinner);
+		return(false);
+	}
+	dinner->printlock = malloc(sizeof(pthread_mutex_t));
+	if (!dinner->printlock)
+	{
+		pthread_mutex_destroy(dinner->statelock);
+		free(dinner->philo);
+		free(dinner->statelock);
+		free(dinner);
+		return(false);
+	}
+	if (pthread_mutex_init(dinner->printlock, NULL) != 0)
+	{
+		pthread_mutex_destroy(dinner->statelock);
+		free(dinner->philo);
+		free(dinner->statelock);
 		free(dinner->printlock);
 		free(dinner);
 		return(false);
@@ -149,7 +167,9 @@ bool	init_forks(t_dinner *dinner)
 	if (!dinner->forks)
 	{
 		pthread_mutex_destroy(dinner->printlock);
+		pthread_mutex_destroy(dinner->statelock);
 		free(dinner->philo);
+		free(dinner->statelock);
 		free(dinner->printlock);
 		free(dinner);
 		return (false);
@@ -186,6 +206,8 @@ t_dinner	*init_dinner(char **argv)
 	if (!init_philos(dinner))//|| die_time < eat_time + sleep_time)
 		return (NULL);
 	if(!init_forks(dinner))
+	{
 		return (NULL);
+	}
 	return (dinner);
 }

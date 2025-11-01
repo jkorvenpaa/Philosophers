@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:18:52 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/10/30 16:36:01 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/01 16:00:01 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ typedef enum e_state
 	DEAD,
 }	t_state;
 
-
-
 typedef struct s_philo
 {
 	int				nbr; //placement of philo, 1->party_count
@@ -49,11 +47,12 @@ typedef struct s_philo
 typedef struct s_dinner
 {
 	long			party_count; //number of forks/philos
-	atomic_long			start_time;
-	atomic_long			die_time;
-	atomic_long			eat_time;
-	atomic_long			sleep_time;
+	long			start_time;
+	long			die_time;
+	long			eat_time;
+	long			sleep_time;
 	long			must_eat;
+	pthread_mutex_t	*statelock;
 	pthread_mutex_t	*printlock;
 	pthread_mutex_t	*forks;
 	t_philo	*philo;
