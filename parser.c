@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 17:55:01 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/11/02 13:27:12 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/02 15:29:48 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ long	mini_atol(const char *nptr)
 	}
 	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
-		if (out > (LONG_MAX - (nptr[i] - '0')) / 10)
+		if (out > INT_MAX)//(LONG_MAX - (nptr[i] - '0')) / 10)
 			return (-2);
 	//	if (sign == -1 && ((-1 * out) < (LONG_MIN + (nptr[i] - '0')) / 10))
 	//		return (LONG_MIN);
@@ -78,7 +78,7 @@ bool	validate_args(int argc, char **argv)
 		}
 		if (mini_atol(argv[i]) <= 0) //must eat???
 		{
-			printf("arguments expected: number between 1 and LONGMAX\n");
+			printf("arguments expected: number between 1 and INTMAX\n");
 			return (false);
 		}
 		i++;
@@ -197,6 +197,7 @@ t_dinner	*init_dinner(char **argv)
 		dinner->must_eat = mini_atol(argv[5]);
 	else
 		dinner->must_eat = 0;
+	dinner->stop = false;
 	if (!init_philos(dinner))//|| die_time < eat_time + sleep_time)
 		return (NULL);
 	if(!init_mutex(dinner))

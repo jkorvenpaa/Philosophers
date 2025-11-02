@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:18:52 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/11/01 16:00:01 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/02 15:18:29 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_philo
 	pthread_mutex_t	*l_fork;
 	pthread_t		id;
 	t_state			state;
-	atomic_long		last_supper;
+	long		last_supper;
 	int				eat_count;
 	struct s_dinner		*dinner;
 }	t_philo;
@@ -52,6 +52,7 @@ typedef struct s_dinner
 	long			eat_time;
 	long			sleep_time;
 	long			must_eat;
+	bool			stop;
 	pthread_mutex_t	*statelock;
 	pthread_mutex_t	*printlock;
 	pthread_mutex_t	*forks;
