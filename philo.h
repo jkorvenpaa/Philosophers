@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:18:52 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/11/03 14:05:25 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:03:20 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,13 @@ bool	validate_args(int argc, char **argv);
 long	mini_atol(const char *nptr);
 t_dinner	*init_dinner(char **argv);
 int		start_dinner(t_dinner *dinner, t_philo *philo);
+void	*single_philo(t_philo *philo);
 void	clean_all(t_dinner *dinner, int count);
 long	get_time(void);
 void	assign_forks(t_dinner *dinner);
 void	print_message(t_philo *philo, char *message);
 void	pick_fork(pthread_mutex_t *fork, t_philo *philo);
+void	monitor(t_dinner *dinner);
 bool	philo_alive(t_dinner *dinner, t_philo *philo);
 bool	meals_done(t_dinner *dinner);
 
