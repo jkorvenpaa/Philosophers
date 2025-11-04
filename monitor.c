@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 11:57:53 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/11/04 12:32:25 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:44:55 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	monitor(t_dinner *dinner)
 	while (1)
 	{
 		i = 0;
-		while(i < dinner->party_count)
+		while (i < dinner->party_count)
 		{
 			if (!philo_alive(dinner, &dinner->philo[i]))
 				return ;
@@ -30,11 +30,12 @@ void	monitor(t_dinner *dinner)
 		if (dinner->must_eat != 0)
 		{
 			if (meals_done(dinner))
-				return;
+				return ;
 		}
 		usleep (500);
 	}
 }
+
 bool	philo_alive(t_dinner *dinner, t_philo *philo)
 {
 	long	time;
@@ -48,12 +49,13 @@ bool	philo_alive(t_dinner *dinner, t_philo *philo)
 		pthread_mutex_unlock(dinner->printlock);
 		return (false);
 	}
-	return (true);	
+	return (true);
 }
+
 bool	meals_done(t_dinner *dinner)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
 	while (i < dinner->party_count)
 	{
@@ -65,5 +67,5 @@ bool	meals_done(t_dinner *dinner)
 	pthread_mutex_lock(dinner->printlock);
 	printf("all philos had %ld meals\n", dinner->must_eat);
 	pthread_mutex_unlock(dinner->printlock);
-	return (true);	
+	return (true);
 }

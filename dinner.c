@@ -6,11 +6,11 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 12:45:35 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/11/04 13:07:24 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/04 15:21:02 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"philo.h"
+#include "philo.h"
 
 void	philo_sleep(t_philo *philo, t_dinner *dinner)
 {
@@ -18,24 +18,25 @@ void	philo_sleep(t_philo *philo, t_dinner *dinner)
 
 	print_message(philo, "is sleeping");
 	s_time = get_time();
-	while (dinner->sleep_time > (get_time() - s_time))// && (dinner->stop == false))
+	while (dinner->sleep_time > (get_time() - s_time))
 		usleep(500);
 }
 
 void	philo_eat(t_philo *philo, t_dinner *dinner)
 {
 	long	e_time;
-	
+
 	print_message(philo, "is eating");
 	philo->last_supper = get_time();
 	e_time = get_time();
-	while (dinner->eat_time > (get_time() - e_time)) //&& (dinner->stop == false))
+	while (dinner->eat_time > (get_time() - e_time))
 		usleep(500);
 	philo->eat_count++;
 }
+
 void	prepare_to_eat(t_philo *philo)
 {
-	if(!philo->even)
+	if ((!philo->even))
 	{
 		pick_fork(philo->l_fork, philo);
 		pick_fork(philo->r_fork, philo);
@@ -52,18 +53,18 @@ void	prepare_to_eat(t_philo *philo)
 
 void	*start_routine(void *arg)
 {
-	t_philo *philo;
-	
-	philo = (t_philo*) arg;
+	t_philo	*philo;
+	long	sleepy;
+
+	philo = (t_philo *) arg;
 	philo->last_supper = philo->dinner->start_time;
 	while (get_time() < philo->dinner->start_time)
 		usleep(500);
 	if (philo->dinner->party_count == 1)
 		return (single_philo(philo));
-	long sleepy;
-	sleepy = (philo->dinner->eat_time/2) *1000;
+	sleepy = (philo->dinner->eat_time / 2) * 1000;
 	if (!philo->even)
-		usleep (sleepy);
+		usleep(sleepy);
 	while (!philo->dinner->stop)
 	{
 		print_message(philo, "is thinking");

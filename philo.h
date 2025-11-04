@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:18:52 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/11/04 12:03:20 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:47:35 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,16 @@
 # include <stdbool.h>
 # include <stdatomic.h>
 
-
-
 typedef struct s_philo
 {
-	int		nbr; //placement of philo, 1->party_count
+	int				nbr; //placement of philo, 1->party_count
 	bool			even; //  even or odd philo nbr
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
 	pthread_t		id;
 	atomic_long		last_supper;
 	atomic_int		eat_count;
-	struct s_dinner		*dinner;
+	struct s_dinner	*dinner;
 }	t_philo;
 
 typedef struct s_dinner
@@ -49,21 +47,21 @@ typedef struct s_dinner
 	pthread_mutex_t	*statelock;
 	pthread_mutex_t	*printlock;
 	pthread_mutex_t	*forks;
-	t_philo	*philo;
+	t_philo			*philo;
 }	t_dinner;
 
-bool	validate_args(int argc, char **argv);
-long	mini_atol(const char *nptr);
+bool		validate_args(int argc, char **argv);
+long		mini_atol(const char *nptr);
 t_dinner	*init_dinner(char **argv);
-int		start_dinner(t_dinner *dinner, t_philo *philo);
-void	*single_philo(t_philo *philo);
-void	clean_all(t_dinner *dinner, int count);
-long	get_time(void);
-void	assign_forks(t_dinner *dinner);
-void	print_message(t_philo *philo, char *message);
-void	pick_fork(pthread_mutex_t *fork, t_philo *philo);
-void	monitor(t_dinner *dinner);
-bool	philo_alive(t_dinner *dinner, t_philo *philo);
-bool	meals_done(t_dinner *dinner);
+int			start_dinner(t_dinner *dinner, t_philo *philo);
+void		*single_philo(t_philo *philo);
+void		clean_all(t_dinner *dinner, int count);
+long		get_time(void);
+void		assign_forks(t_dinner *dinner);
+void		print_message(t_philo *philo, char *message);
+void		pick_fork(pthread_mutex_t *fork, t_philo *philo);
+void		monitor(t_dinner *dinner);
+bool		philo_alive(t_dinner *dinner, t_philo *philo);
+bool		meals_done(t_dinner *dinner);
 
 #endif
