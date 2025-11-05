@@ -6,18 +6,15 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:12:11 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/11/05 11:41:29 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/05 11:52:39 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-
 void	clean_all(t_dinner *dinner, int count)
 {
-	pthread_mutex_destroy(dinner->statelock);
 	pthread_mutex_destroy(dinner->printlock);
-	free(dinner->statelock);
 	free(dinner->printlock);
 	while (count >= 0)
 	{

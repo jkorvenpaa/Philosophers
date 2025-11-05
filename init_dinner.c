@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 13:26:11 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/11/04 15:20:36 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/05 11:52:30 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,25 +54,11 @@ bool	init_philos(t_dinner *dinner)
 
 bool	init_mutex(t_dinner *dinner)
 {
-	dinner->statelock = malloc(sizeof(pthread_mutex_t));
-	if (!dinner->statelock)
-		return (false);
-	if (pthread_mutex_init(dinner->statelock, NULL) != 0)
-	{
-		free(dinner->statelock);
-		return (false);
-	}
 	dinner->printlock = malloc(sizeof(pthread_mutex_t));
 	if (!dinner->printlock)
-	{
-		pthread_mutex_destroy(dinner->statelock);
-		free(dinner->statelock);
 		return (false);
-	}
 	if (pthread_mutex_init(dinner->printlock, NULL) != 0)
 	{
-		pthread_mutex_destroy(dinner->statelock);
-		free(dinner->statelock);
 		free(dinner->printlock);
 		return (false);
 	}
@@ -88,8 +74,6 @@ bool	init_forks(t_dinner *dinner)
 	if (!dinner->forks)
 	{
 		pthread_mutex_destroy(dinner->printlock);
-		pthread_mutex_destroy(dinner->statelock);
-		free(dinner->statelock);
 		free(dinner->printlock);
 		free(dinner);
 		return (false);
