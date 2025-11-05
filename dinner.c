@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 12:45:35 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/11/04 15:21:02 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/05 11:37:05 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,15 @@ void	prepare_to_eat(t_philo *philo)
 	pthread_mutex_unlock(philo->r_fork);
 	pthread_mutex_unlock(philo->l_fork);
 }
+void	philo_think(t_philo *philo, t_dinner *dinner)
+{
+	long time;
+
+	print_message(philo, "is thinking");
+	time = get_time();
+	if ((time + dinner->die_time) < (time + dinner->sleep_time + dinner->eat_time + 1000))
+		usleep(500);
+}
 
 void	*start_routine(void *arg)
 {
@@ -67,7 +76,7 @@ void	*start_routine(void *arg)
 		usleep(sleepy);
 	while (!philo->dinner->stop)
 	{
-		print_message(philo, "is thinking");
+		philo_think(philo, philo->dinner);
 		prepare_to_eat(philo);
 		if (philo->dinner->stop)
 			return (NULL);

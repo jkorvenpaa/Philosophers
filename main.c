@@ -6,21 +6,12 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:12:11 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/11/04 15:22:18 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/05 11:41:29 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	print_args(t_dinner *dinner)
-{
-	printf("%ld\n", dinner->party_count);
-	printf("%ld\n", dinner->start_time);
-	printf("%ld\n", dinner->die_time);
-	printf("%ld\n", dinner->eat_time);
-	printf("%ld\n", dinner->sleep_time);
-	printf("%ld\n", dinner->must_eat);
-}
 
 void	clean_all(t_dinner *dinner, int count)
 {
@@ -48,7 +39,6 @@ int	main(int argc, char **argv)
 	if (!dinner)
 		return (1);
 	start_dinner(dinner, dinner->philo);
-	//print_args (dinner);
 	clean_all(dinner, dinner->party_count - 1);
 	return (0);
 }
