@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:18:52 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/11/05 12:04:43 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/11/06 11:31:48 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_dinner	*init_dinner(char **argv);
 void		clean_all(t_dinner *dinner, int count);
 
 //threads
-int			start_dinner(t_dinner *dinner, t_philo *philo);
+void		start_dinner(t_dinner *dinner, t_philo *philo);
 void		*start_routine(void *arg);
 
 //utils

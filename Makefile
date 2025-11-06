@@ -1,6 +1,6 @@
 NAME = philo
 COMPILER = cc
-CFLAGS = -Wall -Wextra -Werror -g -pthread
+CFLAGS = -Wall -Wextra -Werror -pthread
 SRCS = main.c parser.c init_dinner.c utils.c dinner.c routine.c monitor.c
 	
 OBJS = $(SRCS:%.c=%.o)
